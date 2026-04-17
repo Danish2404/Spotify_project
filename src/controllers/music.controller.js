@@ -84,6 +84,22 @@ async function createAlbum(req,res){
         return res.status(401).json({message:'Invalid token'})
     }
 }
+async function getAllMusic(req, res) {
+    const token = req.cookies.token;
 
+    if (!token) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
 
-module.exports={createMusic, createAlbum };
+    try {
+        jwt.verify(token, process.env.JWT_SECRET);
+
+        const musics = await musicModel.find().populate('artist', 'username');
+
+        res.json(musics);
+    } catch (err) {
+        return res.status(401).json({ message: 'Invalid token' });
+    }
+}
+
+module.exports={createMusic, createAlbum, getAllMusic};

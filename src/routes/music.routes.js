@@ -13,6 +13,8 @@ router.post('/upload',upload.single('music'),musicController.createMusic);
 
 router.post('/album',musicController.createAlbum);
 
+router.get('/', musicController.getAllMusic);
+
 
 
 
