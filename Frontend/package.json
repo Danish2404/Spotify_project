@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "test": "vitest --environment jsdom"
-},
+    "dev": "vite",
+    "build": "vite build",
+    "test": "vitest --environment jsdom"
+  },
   "dependencies": {
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
