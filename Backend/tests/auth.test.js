@@ -5,6 +5,6 @@ describe("Backend API Test", () => {
   test("GET unknown route should return 404", async () => {
     const res = await request(app).get("/unknown");
 
-    expect(res.statusCode).toBe(200);
+    expect(res.statusCode).toBe(404);
   });
 });
