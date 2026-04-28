@@ -1,139 +1,124 @@
 import { useState } from "react";
-
-const BASE_URL = "http://localhost:3000/api";
+import "./App.css";
 
 function App() {
-  const [user, setUser] = useState(null);
-  const [music, setMusic] = useState([]);
-
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    role: "user",
-  });
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  // REGISTER
-  const register = async () => {
-    const res = await fetch(`${BASE_URL}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(form),
-    });
-
-    const data = await res.json();
-    alert(data.message);
-
-    if (res.ok) {
-      setUser(data.user);
-      getMusic();
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([
+    {
+      role: "assistant",
+      content:
+        "Hi, I'm CodeBuddy 👋 Ask me any coding doubt — JavaScript, React, Node.js, debugging, DSA, anything."
     }
-  };
+  ]);
+  const [loading, setLoading] = useState(false);
 
-  // LOGIN
-  const login = async () => {
-    const res = await fetch(`${BASE_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(form),
-    });
+  const sendMessage = async () => {
+    if (!input.trim()) return;
 
-    const data = await res.json();
-    alert(data.message);
+    const updatedMessages = [
+      ...messages,
+      {
+        role: "user",
+        content: input
+      }
+    ];
 
-    if (res.ok) {
-      setUser(data.user);
-      getMusic();
+    setMessages(updatedMessages);
+    setInput("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:3000/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messages: updatedMessages
+        })
+      });
+
+      const data = await res.json();
+
+      setMessages([
+        ...updatedMessages,
+        {
+          role: "assistant",
+          content: data.reply.content
+        }
+      ]);
+    } catch {
+      setMessages([
+        ...updatedMessages,
+        {
+          role: "assistant",
+          content: "Sorry, I couldn't connect to the server."
+        }
+      ]);
     }
+
+    setLoading(false);
   };
 
-  // GET MUSIC (protected)
-  const getMusic = async () => {
-    const res = await fetch(`${BASE_URL}/music`, {
-      credentials: "include",
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      setMusic(data);
-    } else {
-      alert(data.message);
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      sendMessage();
     }
-  };
-
-  // UPLOAD MUSIC (ONLY artist)
-  const uploadMusic = async (e) => {
-    const file = e.target.files[0];
-
-    const formData = new FormData();
-    formData.append("music", file);
-    formData.append("title", "My Song");
-
-    const res = await fetch(`${BASE_URL}/music/upload`, {
-      method: "POST",
-      credentials: "include",
-      body: formData,
-    });
-
-    const data = await res.json();
-    alert(data.message);
-    getMusic();
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h1>Spotify Backend UI 🎵</h1>
+    <div className="app">
+      <div className="chat-container">
+        <h1>CodeBuddy</h1>
+        <p className="subtitle">
+          Your Developer Doubt Solver
+        </p>
 
-      {!user ? (
-        <>
-          <h2>Auth</h2>
+        <div className="examples">
+          Try:
+          <span> What is closure in JavaScript?</span> |
+          <span> Explain async/await</span> |
+          <span> Debug this React error</span>
+        </div>
 
-          <input name="username" placeholder="Username" onChange={handleChange} />
-          <input name="email" placeholder="Email" onChange={handleChange} />
-          <input name="password" type="password" placeholder="Password" onChange={handleChange} />
+        <div className="chat-box">
+          {messages.map((msg, index) => (
+            <div
+              key={index}
+              className={`message ${msg.role}`}
+            >
+              <strong>
+                {msg.role === "user"
+                  ? "You"
+                  : "CodeBuddy"}
+                :
+              </strong>{" "}
+              {msg.content}
+            </div>
+          ))}
 
-          <select name="role" onChange={handleChange}>
-            <option value="user">User</option>
-            <option value="artist">Artist</option>
-          </select>
-
-          <br /><br />
-
-          <button onClick={register}>Register</button>
-          <button onClick={login}>Login</button>
-        </>
-      ) : (
-        <>
-          <h2>Welcome {user.username}</h2>
-
-          <button onClick={getMusic}>Load Songs</button>
-
-          {/* Only artist can upload */}
-          {user.role === "artist" && (
-            <>
-              <h3>Upload Music</h3>
-              <input type="file" onChange={uploadMusic} />
-            </>
+          {loading && (
+            <div className="thinking">
+              CodeBuddy is thinking...
+            </div>
           )}
+        </div>
 
-          <ul>
-            {music.map((m) => (
-              <li key={m._id}>
-  🎵 {m.title} — {m.artist?.username}
-  <br />
-  <audio controls src={m.uri}></audio>
-</li>
-            ))}
-          </ul>
-        </>
-      )}
+        <div className="input-area">
+          <input
+            type="text"
+            placeholder="Ask coding doubts..."
+            value={input}
+            onChange={(e) =>
+              setInput(e.target.value)
+            }
+            onKeyDown={handleKeyDown}
+          />
+          <button onClick={sendMessage}>
+            Send
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
