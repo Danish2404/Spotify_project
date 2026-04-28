@@ -1,22 +1,21 @@
-# React + Vite
+# AI Chatbot
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## What I Built
+A full-stack AI chatbot integrated into my Spotify project using React frontend and Express backend.
 
-Currently, two official plugins are available:
+## API and Model
+**API:** OpenRouter  
+**Model:** openai/gpt-4o-mini  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Why backend only:**  
+If the API key is placed in frontend JavaScript, anyone can inspect browser DevTools or Network requests and steal the key. Keeping it in the backend .env keeps it private.
 
-## React Compiler
+**Fallback provider:**  
+Google Gemini API.  
+Changes needed:
+1. Change base URL to Gemini endpoint  
+2. Change model name to gemini-1.5-flash
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-
-CI assignment completed 02
-Jest assignment completed
-Jest assignment completed final
+## Live Deployment
+**Frontend:** add-your-url  
+**Backend:** add-your-url

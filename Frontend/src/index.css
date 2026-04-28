@@ -1,15 +1,25 @@
 body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  transition: 0.3s;
+  background: white;
+  color: black;
+}
+
+body.dark {
   background: #121212;
   color: white;
-  font-family: Arial;
+}
+
+.container {
   text-align: center;
+  margin-top: 150px;
 }
 
 button {
-  margin: 10px;
-  padding: 10px;
-  background: #1db954;
+  padding: 12px 20px;
   border: none;
-  color: white;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 16px;
 }
