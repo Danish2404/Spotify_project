@@ -17,5 +17,5 @@ Changes needed:
 2. Change model name to gemini-1.5-flash
 
 ## Live Deployment
-**Frontend:** add-your-url  
-**Backend:** add-your-url
+**Frontend:** https://spotify-project-xi.vercel.app/
+**Backend:** https://spotify-project-1-p1ln.onrender.com
